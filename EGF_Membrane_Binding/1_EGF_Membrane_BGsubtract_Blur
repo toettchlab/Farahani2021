@@ -1,0 +1,30 @@
+input = "/Volumes/Farahani/Imaging/2021_02_26_10A_EGFmembrane_IF/";
+output = "/Volumes/Farahani/Imaging/2021_02_26_10A_EGFmembrane_IF/quantification_EGFmembrane/output/";
+
+list = getFileList(input);
+
+for (i = 0; i < list.length; i++){
+
+file = list[i];
+name = substring(file,0,lengthOf(file)-4);
+open(input + file);
+image = getTitle();
+
+run("Z Project...", "projection=[Max Intensity]");
+run("Split Channels");
+selectWindow("C3-MAX_" + image);
+run("Subtract Background...", "rolling=10");
+run("Gaussian Blur...", "sigma=1");
+
+saveAs("Tiff", output + name + "_EGF");
+close();
+selectWindow("C2-MAX_" + image);
+saveAs("Tiff", output + name + "_EGFR");
+close();
+selectWindow("C1-MAX_" + image);
+saveAs("Tiff", output + name + "_Ecad");
+close();
+
+close();
+
+};
